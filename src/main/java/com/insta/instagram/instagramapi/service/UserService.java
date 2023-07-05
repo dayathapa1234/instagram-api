@@ -1,5 +1,6 @@
 package com.insta.instagram.instagramapi.service;
 
+import com.insta.instagram.instagramapi.exception.UserException;
 import com.insta.instagram.instagramapi.modal.User;
 
 import java.util.List;

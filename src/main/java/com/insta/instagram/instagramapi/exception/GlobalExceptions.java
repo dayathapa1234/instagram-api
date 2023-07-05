@@ -21,9 +21,9 @@ public class GlobalExceptions {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorDetails> methodArgumentExceptionHandler(UserException e, WebRequest req){
+    public ResponseEntity<ErrorDetails> methodArgumentExceptionHandler(MethodArgumentNotValidException me, WebRequest req){
 
-        ErrorDetails err = new ErrorDetails(e.getMessage(), req.getDescription(false), LocalDateTime.now());
+        ErrorDetails err = new ErrorDetails(me.getBindingResult().getFieldError().getDefaultMessage(), "Validation Error", LocalDateTime.now());
 
         return  new ResponseEntity<ErrorDetails>(err, HttpStatus.BAD_REQUEST);
     }
