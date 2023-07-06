@@ -10,7 +10,7 @@ public class UserDTO {
     private String name;
     private String userImage;
 
-
+    public UserDTO() {}
     public UserDTO(Integer id, String username, String email, String name, String userImage) {
         this.id = id;
         this.username = username;

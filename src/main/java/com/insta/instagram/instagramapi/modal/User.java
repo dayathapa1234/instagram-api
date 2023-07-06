@@ -39,6 +39,9 @@ public class User {
     @ManyToMany
     private List<Post> savedPost = new ArrayList<>();
 
+    public User() {
+    }
+
     public User(Integer id, String username, String name, String email, Integer mobile, String website, String bio, String gender, String image, String password, Set<UserDTO> follower, Set<UserDTO> following, List<Story> stories, List<Post> savedPost) {
         this.id = id;
         this.username = username;
