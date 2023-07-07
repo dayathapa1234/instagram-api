@@ -5,6 +5,7 @@ import com.insta.instagram.instagramapi.modal.User;
 import com.insta.instagram.instagramapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +17,7 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/signup")
+    @PostMapping(value = "/signup",consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> registerUserHandler(@RequestBody User user) throws UserException {
         User createdUser = userService.registerUser(user);
         return new ResponseEntity<User>(createdUser, HttpStatus.OK);

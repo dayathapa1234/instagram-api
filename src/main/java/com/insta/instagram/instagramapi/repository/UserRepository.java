@@ -16,9 +16,9 @@ public interface UserRepository extends JpaRepository<User,Integer> {
 
     public Optional<User> findByUsername(String username);
 
-    @Query("SELECT u FROM user u WHERE u.id IN  :users")
+    @Query(value = "SELECT * FROM users u WHERE u.id IN :users",nativeQuery = true)
     public List<User> findAllUsersByUserIds(@Param("users") List<Integer> userIds);
 
-    @Query("SELECT DISTINCT u FROM user u WHERE u.username LIKE %:query% OR u.email LIKE %:query%")
+    @Query(value = "SELECT DISTINCT * FROM users u WHERE u.username LIKE %:query% OR u.email LIKE %:query%", nativeQuery = true)
     public List<User> findByQuery(@Param("query") String query);
 }
