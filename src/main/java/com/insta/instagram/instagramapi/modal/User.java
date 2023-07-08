@@ -24,6 +24,8 @@ public class User {
     private String bio;
     private String gender;
     private String image;
+
+    @Column(length = 60)
     private String password;
 
     @Embedded

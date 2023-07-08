@@ -4,7 +4,11 @@ import com.insta.instagram.instagramapi.dto.UserDTO;
 import com.insta.instagram.instagramapi.exception.UserException;
 import com.insta.instagram.instagramapi.modal.User;
 import com.insta.instagram.instagramapi.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,8 +19,14 @@ public class UserServiceImplementation implements UserService{
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+
     @Override
     public User registerUser(User user) throws UserException {
+
         Optional<User> doesEmailExistInDB = userRepository.findByEmail(user.getEmail());
         Optional<User> doesUsernameExistInDB = userRepository.findByUsername(user.getUsername());
 
@@ -35,7 +45,7 @@ public class UserServiceImplementation implements UserService{
 
         newUser.setEmail(user.getEmail());
         newUser.setUsername(user.getUsername());
-        newUser.setPassword(user.getPassword());
+        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
         newUser.setName(user.getName());
 
         return userRepository.save(newUser);

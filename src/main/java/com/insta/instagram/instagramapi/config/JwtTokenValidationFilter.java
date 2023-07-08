@@ -9,6 +9,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,9 +20,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import javax.crypto.SecretKey;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class JwtTokenValidationFilter extends OncePerRequestFilter {
-
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -32,7 +33,6 @@ public class JwtTokenValidationFilter extends OncePerRequestFilter {
             try{
                 //Bearer <token>
                 jwt = jwt.substring(7);
-
                 SecretKey key = Keys.hmacShaKeyFor(SecurityContext.JWT_KEY.getBytes());
 
                 Claims claims = Jwts.parserBuilder().setSigningKey(key)
@@ -48,7 +48,7 @@ public class JwtTokenValidationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(auth);
 
             }catch (Exception e){
-                throw  new BadCredentialsException("Invalid token...");
+                throw new BadCredentialsException("Invalid token...");
             }
         }
 
