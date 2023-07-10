@@ -1,15 +1,13 @@
 package com.insta.instagram.instagramapi.service;
 
+import com.insta.instagram.instagramapi.dto.LoginResponseDTO;
 import com.insta.instagram.instagramapi.exception.UserException;
 import com.insta.instagram.instagramapi.modal.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 public interface UserService{
 
-    public User registerUser(User user) throws UserException;
     public User findUserById(Integer id) throws UserException;
     public User findUserProfile(String token) throws UserException;
     public User findUserByUsername(String username) throws UserException;

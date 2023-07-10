@@ -2,22 +2,24 @@ package com.insta.instagram.instagramapi.modal;
 
 import com.insta.instagram.instagramapi.dto.UserDTO;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name="users")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    @Column(unique = true)
     private String username;
     private String name;
+
+    @Column(unique = true)
     private String email;
     private Integer mobile;
     private String website;
@@ -41,10 +43,15 @@ public class User {
     @ManyToMany
     private List<Post> savedPost = new ArrayList<>();
 
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    private Set<Role> authorities;
+
     public User() {
+        super();
+        this.authorities = new HashSet<Role>();
     }
 
-    public User(Integer id, String username, String name, String email, Integer mobile, String website, String bio, String gender, String image, String password, Set<UserDTO> follower, Set<UserDTO> following, List<Story> stories, List<Post> savedPost) {
+    public User(Integer id, String username, String name, String email, Integer mobile, String website, String bio, String gender, String image, String password, Set<UserDTO> follower, Set<UserDTO> following, List<Story> stories, List<Post> savedPost, Set<Role> authorities) {
         this.id = id;
         this.username = username;
         this.name = name;
@@ -59,6 +66,7 @@ public class User {
         this.following = following;
         this.stories = stories;
         this.savedPost = savedPost;
+        this.authorities = authorities;
     }
 
     public Integer getId() {
@@ -71,6 +79,26 @@ public class User {
 
     public String getUsername() {
         return username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     public void setUsername(String username) {
@@ -131,6 +159,15 @@ public class User {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.authorities;
+    }
+
+    public void setAuthorities(Set<Role> authorities) {
+        this.authorities = authorities;
     }
 
     public String getPassword() {

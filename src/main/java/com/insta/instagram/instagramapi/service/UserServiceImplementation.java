@@ -1,18 +1,28 @@
 package com.insta.instagram.instagramapi.service;
 
+import com.insta.instagram.instagramapi.dto.LoginResponseDTO;
 import com.insta.instagram.instagramapi.dto.UserDTO;
 import com.insta.instagram.instagramapi.exception.UserException;
+import com.insta.instagram.instagramapi.modal.Role;
 import com.insta.instagram.instagramapi.modal.User;
+import com.insta.instagram.instagramapi.repository.RoleRepository;
 import com.insta.instagram.instagramapi.repository.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserServiceImplementation implements UserService{
@@ -21,35 +31,9 @@ public class UserServiceImplementation implements UserService{
     private UserRepository userRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private RoleRepository roleRepository;
 
 
-    @Override
-    public User registerUser(User user) throws UserException {
-
-        Optional<User> doesEmailExistInDB = userRepository.findByEmail(user.getEmail());
-        Optional<User> doesUsernameExistInDB = userRepository.findByUsername(user.getUsername());
-
-        if(doesEmailExistInDB.isPresent()){
-            throw new UserException("Email already exist");
-        }
-
-        if (doesUsernameExistInDB.isPresent()) {
-            throw new UserException("Username is already taken");
-        }
-
-        if(user.getEmail()==null || user.getUsername()==null || user.getPassword()==null || user.getName()==null){
-            throw new UserException("All fields are required");
-        }
-        User newUser = new User();
-
-        newUser.setEmail(user.getEmail());
-        newUser.setUsername(user.getUsername());
-        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
-        newUser.setName(user.getName());
-
-        return userRepository.save(newUser);
-    }
     @Override
     public User findUserById(Integer id) throws UserException {
         Optional<User> userInDB = userRepository.findById(id);
