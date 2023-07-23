@@ -1,28 +1,17 @@
 package com.insta.instagram.instagramapi.service;
 
-import com.insta.instagram.instagramapi.dto.LoginResponseDTO;
 import com.insta.instagram.instagramapi.dto.UserDTO;
 import com.insta.instagram.instagramapi.exception.UserException;
-import com.insta.instagram.instagramapi.modal.Role;
 import com.insta.instagram.instagramapi.modal.User;
 import com.insta.instagram.instagramapi.repository.RoleRepository;
 import com.insta.instagram.instagramapi.repository.UserRepository;
+import com.insta.instagram.instagramapi.security.JwtTokenClaims;
+import com.insta.instagram.instagramapi.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class UserServiceImplementation implements UserService{
@@ -32,6 +21,10 @@ public class UserServiceImplementation implements UserService{
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
 
 
     @Override
@@ -47,7 +40,18 @@ public class UserServiceImplementation implements UserService{
 
     @Override
     public User findUserProfile(String token) throws UserException {
-        return null;
+
+        token = token.substring(7);
+        System.out.println(token);
+        JwtTokenClaims jwtTokenClaims = jwtTokenProvider.getClaimsFromToken(token);
+        String username = jwtTokenClaims.getUsername();
+
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+
+        if (optionalUser.isPresent()){
+            return optionalUser.get();
+        }
+        throw new UserException("Invalid token...");
     }
 
     @Override

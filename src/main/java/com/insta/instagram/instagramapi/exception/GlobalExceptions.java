@@ -12,6 +12,13 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 public class GlobalExceptions {
 
+    @ExceptionHandler(CommentException.class)
+    public ResponseEntity<ErrorDetails> CommentExceptionHandler(CommentException ce, WebRequest req ){
+        ErrorDetails err = new ErrorDetails(ce.getMessage(), req.getDescription(false), LocalDateTime.now());
+
+        return  new ResponseEntity<ErrorDetails>(err, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(UserException.class)
     public ResponseEntity<ErrorDetails> UserExceptionHandler(UserException ue, WebRequest req){
 
@@ -20,8 +27,16 @@ public class GlobalExceptions {
         return  new ResponseEntity<ErrorDetails>(err, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(PostException.class)
+    public ResponseEntity<ErrorDetails> PostExceptionHandler(PostException pe, WebRequest req){
+
+        ErrorDetails err = new ErrorDetails(pe.getMessage(), req.getDescription(false), LocalDateTime.now());
+
+        return  new ResponseEntity<ErrorDetails>(err, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorDetails> methodArgumentExceptionHandler(MethodArgumentNotValidException me, WebRequest req){
+    public ResponseEntity<ErrorDetails> MethodArgumentExceptionHandler(MethodArgumentNotValidException me, WebRequest req){
 
         ErrorDetails err = new ErrorDetails(me.getBindingResult().getFieldError().getDefaultMessage(), "Validation Error", LocalDateTime.now());
 
@@ -29,7 +44,7 @@ public class GlobalExceptions {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorDetails> otherExceptionHandler(Exception e, WebRequest req){
+    public ResponseEntity<ErrorDetails> OtherExceptionHandler(Exception e, WebRequest req){
 
         ErrorDetails err = new ErrorDetails(e.getMessage(), req.getDescription(false), LocalDateTime.now());
 

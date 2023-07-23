@@ -30,6 +30,8 @@ public class Comment {
 
     private LocalDateTime createdAt;
 
+    public Comment() {}
+
     public Comment(Integer id, UserDTO user, String content, Set<UserDTO> likedByUser, LocalDateTime createdAt) {
         this.id = id;
         this.user = user;

@@ -1,6 +1,6 @@
-package com.insta.instagram.instagramapi.service;
+package com.insta.instagram.instagramapi.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;

@@ -1,4 +1,4 @@
-package com.insta.instagram.instagramapi.service;
+package com.insta.instagram.instagramapi.security;
 
 import com.insta.instagram.instagramapi.dto.LoginResponseDTO;
 import com.insta.instagram.instagramapi.exception.UserException;
@@ -81,12 +81,12 @@ public class AuthService implements UserDetailsService {
     }
 
     public LoginResponseDTO userSignin(String username, String password){
-        System.out.println("gsgrgdrg");
         try{
             Authentication auth = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(username,password)
             );
             String token = tokenService.generateJwt(auth);
+            System.out.println(auth.getName());
             return new LoginResponseDTO(userRepository.findByUsername(username).get(),token);
         }catch (AuthenticationException e){
             throw new BadCredentialsException("Invalid username or password");

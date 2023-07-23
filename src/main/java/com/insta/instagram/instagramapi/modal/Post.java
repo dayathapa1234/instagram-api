@@ -35,8 +35,11 @@ public class Post {
 
     @Embedded
     @ElementCollection
-    @JoinTable(name="likedByUsers", joinColumns = @JoinColumn(name="user_id"))
+    @JoinTable(name="likedByUsers")
     private Set<UserDTO> likedByUser = new HashSet<UserDTO>();
+
+
+    public Post(){};
 
     public Post(Integer id, String caption, String image, String location, LocalDateTime createdAt, UserDTO user, List<Comment> comments, Set<UserDTO> likedByUser) {
         this.id = id;
